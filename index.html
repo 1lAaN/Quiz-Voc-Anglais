@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Vocabulaire Anglais</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Section 1 : Accueil -->
+       <section id="home" class="section active">
+            <h1>Quiz de Vocabulaire Anglais</h1>
+            <p>Révisez votre vocabulaire d'anglais de manière interactive !</p>
+            <button id="startBtn" class="btn">Commencer</button>
+        </section>
+
+        <!-- Section 2 : Choix du thème -->
+        <section id="theme-choice" class="section">
+            <h2>Choisissez un thème</h2>
+            <div class="theme-buttons">
+                <button class="btn theme-btn" data-theme="jobHunt">
+                    <span class="theme-title">Job Hunt</span>
+                    <span class="theme-desc">Recherche d'emploi</span>
+                </button>
+                <button class="btn theme-btn" data-theme="cybersecurity">
+                    <span class="theme-title">Cybersécurité</span>
+                    <span class="theme-desc">Sécurité informatique</span>
+                </button>
+                <button class="btn theme-btn theme-mix" data-theme="mix">
+                    <span class="theme-title">Mix 🔥</span>
+                    <span class="theme-desc">Les deux thèmes mélangés</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 3 : Choix de la difficulté -->
+        <section id="difficulty-choice" class="section">
+            <h2>Choisissez la difficulté</h2>
+            <div class="difficulty-buttons">
+                <button class="btn difficulty-btn" data-difficulty="easy">Facile</button>
+                <button class="btn difficulty-btn" data-difficulty="medium">Moyen</button>
+                <button class="btn difficulty-btn" data-difficulty="hard">Difficile</button>
+            </div>
+        </section>
+
+        <!-- Section 4 : Quiz -->
+        <section id="quiz" class="section">
+            <div class="quiz-header">
+                <span id="question-number">Question 1/10</span>
+                <span id="score">Score: 0</span>
+            </div>
+            
+            <div id="question-container">
+                <h3 id="question-text">La question apparaîtra ici</h3>
+                
+                <!-- Pour les QCM -->
+                <div id="choices-container" class="choices">
+                    <!-- Les boutons de choix seront générés en JS -->
+                </div>
+                
+                <!-- Pour les questions où il faut écrire -->
+                <div id="write-container" class="write-answer">
+                    <input type="text" id="answer-input" placeholder="Écrivez votre réponse...">
+                    <button id="submit-answer" class="btn">Valider</button>
+                </div>
+            </div>
+            
+            <div id="feedback" class="feedback"></div>
+            
+            <button id="next-btn" class="btn" style="display: none;">Question suivante</button>
+        </section>
+
+        <!-- Section 5 : Résultats -->
+        <section id="results" class="section">
+            <h2>Quiz terminé ! 🎉</h2>
+            <div class="results-content">
+                <p class="final-score">Score final: <span id="final-score">0</span>/10</p>
+                <p id="result-message"></p>
+                <button id="restart-btn" class="btn">Recommencer</button>
+            </div>
+        </section>
+
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
