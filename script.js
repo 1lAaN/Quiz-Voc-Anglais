@@ -124,3 +124,283 @@ function createQCM(word, numChoices, vocab) {
         correctAnswer: correctIndex // On garde l'index de la bonne réponse
     };
 }
+
+                // QUESTIONS
+
+// Fonction pour créer une question selon la difficulté
+function createQuestion(word, difficulty, vocab) {
+    switch(difficulty) {
+        case 'easy':
+            // 50% QCM, 50% Vrai/Faux
+            return Math.random() > 0.5 
+                ? createQCM(word, 4, vocab)
+                : createTrueFalse(word, vocab);
+        
+        case 'medium':
+            // QCM avec 3 choix
+            return createQCM(word, 3, vocab);
+        
+        case 'hard':
+            // Question où il faut écrire la réponse (FR → EN)
+            return createWriteAnswer(word);
+        
+        default:
+            return createQCM(word, 4, vocab);
+    }
+}
+
+// Fonction pour créer une question Vrai/Faux
+function createTrueFalse(word, vocab) {
+    // 50% de chances d'avoir la bonne traduction
+    const isCorrect = Math.random() > 0.5;
+    
+    let proposedTranslation;
+    if (isCorrect) {
+        proposedTranslation = word.fr;
+    } else {
+        // Prendre une mauvaise traduction au hasard
+        const otherWords = vocab.filter(w => w.fr !== word.fr);
+        const randomWord = otherWords[Math.floor(Math.random() * otherWords.length)];
+        proposedTranslation = randomWord.fr;
+    }
+    
+    return {
+        type: 'trueFalse',
+        question: `"${word.en}" signifie "${proposedTranslation}"`,
+        correctAnswer: isCorrect
+    };
+}
+
+// Fonction pour créer une question à écrire (difficile)
+function createWriteAnswer(word) {
+    return {
+        type: 'write',
+        question: word.fr, // On donne le français
+        correctAnswer: word.en.toLowerCase().trim() // La réponse attendue en anglais
+    };
+}
+
+// Fonction pour démarrer le quiz
+function startQuiz() {
+    // Générer les questions
+    currentQuestions = generateQuestions(currentTheme, currentDifficulty);
+    currentQuestionIndex = 0;
+    score = 0;
+    
+    // Afficher la section quiz
+    showSection('quiz');
+    
+    // Afficher la première question
+    displayQuestion();
+}
+
+                // AFFICHER
+
+// Fonction pour afficher une question
+function displayQuestion() {
+    const question = currentQuestions[currentQuestionIndex];
+    
+    // Mettre à jour le numéro de question et le score
+    document.getElementById('question-number').textContent = `Question ${currentQuestionIndex + 1}/${totalQuestions}`;
+    document.getElementById('score').textContent = `Score: ${score}`;
+    
+    // Afficher la question
+    document.getElementById('question-text').textContent = question.question;
+    
+    // Cacher le feedback et le bouton suivant
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('feedback').className = 'feedback';
+    buttons.next.style.display = 'none';
+    
+    // Réinitialiser les containers
+    const choicesContainer = document.getElementById('choices-container');
+    const writeContainer = document.getElementById('write-container');
+    choicesContainer.innerHTML = '';
+    choicesContainer.style.display = 'none';
+    writeContainer.style.display = 'none';
+    
+    // Afficher selon le type de question
+    if (question.type === 'qcm') {
+        displayQCM(question);
+    } else if (question.type === 'trueFalse') {
+        displayTrueFalse(question);
+    } else if (question.type === 'write') {
+        displayWriteAnswer(question);
+    }
+}
+
+// Afficher une question QCM
+function displayQCM(question) {
+    const choicesContainer = document.getElementById('choices-container');
+    choicesContainer.style.display = 'block';
+    
+    question.choices.forEach((choice, index) => {
+        const button = document.createElement('button');
+        button.className = 'choice-btn';
+        button.textContent = choice;
+        button.addEventListener('click', () => checkAnswer(index));
+        choicesContainer.appendChild(button);
+    });
+}
+
+// Afficher une question Vrai/Faux
+function displayTrueFalse(question) {
+    const choicesContainer = document.getElementById('choices-container');
+    choicesContainer.style.display = 'block';
+    
+    const trueBtn = document.createElement('button');
+    trueBtn.className = 'choice-btn';
+    trueBtn.textContent = 'Vrai ✓';
+    trueBtn.addEventListener('click', () => checkAnswer(true));
+    
+    const falseBtn = document.createElement('button');
+    falseBtn.className = 'choice-btn';
+    falseBtn.textContent = 'Faux ✗';
+    falseBtn.addEventListener('click', () => checkAnswer(false));
+    
+    choicesContainer.appendChild(trueBtn);
+    choicesContainer.appendChild(falseBtn);
+}
+
+// Afficher une question à écrire
+function displayWriteAnswer(question) {
+    const writeContainer = document.getElementById('write-container');
+    writeContainer.style.display = 'block';
+    
+    const input = document.getElementById('answer-input');
+    input.value = '';
+    input.focus();
+    
+    const submitBtn = document.getElementById('submit-answer');
+    
+    // Retirer les anciens event listeners
+    const newSubmitBtn = submitBtn.cloneNode(true);
+    submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
+    
+    // Ajouter le nouveau event listener
+    newSubmitBtn.addEventListener('click', () => {
+        const userAnswer = input.value.toLowerCase().trim();
+        checkAnswer(userAnswer);
+    });
+    
+    // Permettre de valider avec Entrée
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const userAnswer = input.value.toLowerCase().trim();
+            checkAnswer(userAnswer);
+        }
+    });
+}
+
+            // VERIFIER LA REPONSE
+
+// Fonction pour vérifier la réponse
+function checkAnswer(userAnswer) {
+    const question = currentQuestions[currentQuestionIndex];
+    let isCorrect = false;
+    
+    // Vérifier selon le type de question
+    if (question.type === 'qcm') {
+        isCorrect = userAnswer === question.correctAnswer;
+    } else if (question.type === 'trueFalse') {
+        isCorrect = userAnswer === question.correctAnswer;
+    } else if (question.type === 'write') {
+        isCorrect = userAnswer === question.correctAnswer;
+    }
+    
+    // Mettre à jour le score
+    if (isCorrect) {
+        score++;
+        document.getElementById('score').textContent = `Score: ${score}`;
+    }
+    
+    // Afficher le feedback
+    showFeedback(isCorrect, question);
+    
+    // Désactiver les boutons de réponse
+    disableAnswerButtons();
+    
+    // Afficher le bouton "Question suivante"
+    buttons.next.style.display = 'block';
+}
+
+// Afficher le feedback (correct/incorrect)
+function showFeedback(isCorrect, question) {
+    const feedback = document.getElementById('feedback');
+    
+    if (isCorrect) {
+        feedback.textContent = '✓ Correct !';
+        feedback.className = 'feedback correct';
+    } else {
+        // Afficher la bonne réponse selon le type
+        let correctAnswerText = '';
+        
+        if (question.type === 'qcm') {
+            correctAnswerText = question.choices[question.correctAnswer];
+        } else if (question.type === 'trueFalse') {
+            correctAnswerText = question.correctAnswer ? 'Vrai' : 'Faux';
+        } else if (question.type === 'write') {
+            correctAnswerText = question.correctAnswer;
+        }
+        
+        feedback.textContent = `✗ Incorrect ! La bonne réponse était : ${correctAnswerText}`;
+        feedback.className = 'feedback incorrect';
+    }
+}
+
+// Désactiver les boutons de réponse après avoir répondu
+function disableAnswerButtons() {
+    // Désactiver les boutons QCM/Vrai-Faux
+    const choiceBtns = document.querySelectorAll('.choice-btn');
+    choiceBtns.forEach(btn => {
+        btn.disabled = true;
+        btn.style.cursor = 'not-allowed';
+        btn.style.opacity = '0.6';
+    });
+    
+    // Désactiver l'input et le bouton pour les questions à écrire
+    const input = document.getElementById('answer-input');
+    const submitBtn = document.getElementById('submit-answer');
+    input.disabled = true;
+    submitBtn.disabled = true;
+}
+
+// Bouton "Question suivante"
+buttons.next.addEventListener('click', () => {
+    currentQuestionIndex++;
+    
+    if (currentQuestionIndex < totalQuestions) {
+        // Il reste des questions
+        displayQuestion();
+    } else {
+        // Quiz terminé
+        showResults();
+    }
+});
+
+// Afficher les résultats finaux
+function showResults() {
+    showSection('results');
+    
+    document.getElementById('final-score').textContent = score;
+    
+    const percentage = (score / totalQuestions) * 100;
+    const messageElement = document.getElementById('result-message');
+    
+    if (percentage === 100) {
+        messageElement.textContent = '🏆 Parfait ! Tu maîtrises ce vocabulaire !';
+        messageElement.style.color = '#4CAF50';
+    } else if (percentage >= 80) {
+        messageElement.textContent = '👏 Excellent travail ! Continue comme ça !';
+        messageElement.style.color = '#8BC34A';
+    } else if (percentage >= 60) {
+        messageElement.textContent = '👍 Pas mal ! Encore un peu de révision et ce sera parfait !';
+        messageElement.style.color = '#FFC107';
+    } else if (percentage >= 40) {
+        messageElement.textContent = '💪 Continue à réviser, tu vas y arriver !';
+        messageElement.style.color = '#FF9800';
+    } else {
+        messageElement.textContent = '📚 N\'hésite pas à revoir le vocabulaire et recommence !';
+        messageElement.style.color = '#FF5722';
+    }
+}
