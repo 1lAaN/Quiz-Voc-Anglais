@@ -227,6 +227,10 @@ function displayQuestion() {
     } else if (question.type === 'write') {
         displayWriteAnswer(question);
     }
+
+    // Dans displayQuestion(), ajoute ça à la fin :
+const progressPercent = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+document.getElementById('progress-bar').style.width = progressPercent + '%';
 }
 
 // Afficher une question QCM
@@ -269,9 +273,11 @@ function displayWriteAnswer(question) {
     
     const input = document.getElementById('answer-input');
     input.value = '';
+    input.disabled = false;  // ← Réactive l'input !
     input.focus();
     
     const submitBtn = document.getElementById('submit-answer');
+    submitBtn.disabled = false;  // ← Réactive le bouton !
     
     // Retirer les anciens event listeners
     const newSubmitBtn = submitBtn.cloneNode(true);
@@ -404,3 +410,4 @@ function showResults() {
         messageElement.style.color = '#FF5722';
     }
 }
+

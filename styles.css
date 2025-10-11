@@ -7,12 +7,43 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #6c5ce7;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;  /* Colonne : header, container, footer */
     padding: 20px;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.header {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto 20px auto;
+}
+
+.back-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.back-link:hover {
+    opacity: 0.8;
+    transform: translateX(-5px);
 }
 
 .container {
@@ -22,7 +53,85 @@ body {
     padding: 40px;
     max-width: 600px;
     width: 100%;
-    min-height: 400px;
+    margin: 0 auto;  /* Centre horizontalement */
+    /* flex: 1;  /* Prend tout l'espace disponible */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Liste des thèmes sur la page d'accueil */
+.themes-preview {
+    margin: 30px 0;
+    padding: 25px;
+    background: linear-gradient(135deg, #667eea10, #764ba210);
+    border-radius: 15px;
+}
+
+.themes-preview h3 {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.theme-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.tag {
+    background: white;
+    color: #667eea;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 2px solid #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+}
+
+.tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.tag.coming-soon {
+    background: #f0f0f0;
+    color: #999;
+    border-color: #ddd;
+    cursor: default;
+}
+
+.tag.coming-soon:hover {
+    transform: none;
+}
+
+footer {
+    max-width: 600px;
+    width: 100%;
+    margin: 20px auto 0 auto;
+}
+
+.footer {
+    color: white;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 15px;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.footer a:hover {
+    border-bottom-color: white;
 }
 
 /* Sections */
@@ -44,6 +153,13 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+
+
+#home .btn{
+    display: block;
+    margin: 0 auto;
 }
 
 /* Titres */
@@ -88,6 +204,7 @@ p {
     transition: all 0.3s ease;
     font-weight: 600;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    justify-content: center;
 }
 
 .btn:hover {
@@ -105,6 +222,7 @@ p {
     flex-direction: column;
     gap: 15px;
     margin-top: 20px;
+    ;
 }
 
 .theme-btn {
@@ -153,21 +271,28 @@ p {
 
 /* Boutons de choix (QCM / Vrai-Faux) */
 .choices {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: grid;
+     grid-template-columns: 1fr 1fr !important;
+    gap: 40px;  /* Plus d'espace entre les boutons */
 }
 
 .choice-btn {
     background: white;
     color: #333;
     border: 2px solid #ddd;
-    padding: 18px;
+    padding: 15px;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 1rem;
-    text-align: left;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;  /* ← AJOUTE ÇA ! Force le bouton à prendre toute la largeur */
 }
 
 .choice-btn:hover:not(:disabled) {
@@ -199,6 +324,30 @@ p {
 #answer-input:focus {
     outline: none;
     border-color: #667eea;
+}
+
+#answer-input {
+    pointer-events: auto;
+    cursor: text;
+    background: white;
+    padding: 15px;
+    font-size: 1.1rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#answer-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+#answer-input:disabled {
+    background: #f0f0f0;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 /* Feedback */
@@ -265,4 +414,22 @@ p {
         padding: 12px 30px;
         font-size: 1rem;
     }
+}
+
+/* CSS pour la barre de progression */
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 10px;
 }

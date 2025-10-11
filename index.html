@@ -7,12 +7,32 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <div class="header">
+            <a href="index.html" class="back-link">← Retour à l'accueil</a>
+        </div>
+
     <div class="container">
 
+        <div class="header">
+            <a href="index.html" class="back-link">← Retour à l'accueil</a>
+        </div>
+
         <!-- Section 1 : Accueil -->
-       <section id="home" class="section active">
+        <section id="home" class="section active">
             <h1>Quiz de Vocabulaire Anglais</h1>
             <p>Révisez votre vocabulaire d'anglais de manière interactive !</p>
+            
+            <!-- NOUVEAU : Liste des thèmes disponibles -->
+            <div class="themes-preview">
+                <h3>Thèmes disponibles :</h3>
+                <div class="theme-tags">
+                    <span class="tag">📋 Job Hunt</span>
+                    <span class="tag">🔒 Cybersécurité</span>
+                    <span class="tag coming-soon">🔜 À venir...</span>
+                </div>
+            </div>
+            
             <button id="startBtn" class="btn">Commencer</button>
         </section>
 
@@ -45,6 +65,10 @@
             </div>
         </section>
 
+        <!-- à ajouter: 
+         un choix du nombre de question,
+         un mode chronometré -->
+
         <!-- Section 4 : Quiz -->
         <section id="quiz" class="section">
             <div class="quiz-header">
@@ -54,6 +78,10 @@
             
             <div id="question-container">
                 <h3 id="question-text">La question apparaîtra ici</h3>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
                 
                 <!-- Pour les QCM -->
                 <div id="choices-container" class="choices">
@@ -84,7 +112,16 @@
 
     </div>
 
-<script src="questions-data.js"></script>
+    <footer>
+        <div class="footer">
+            Made by
+            <a href="https://github.com/1lAaN" target="_blank" style="color: #fff;">1lAaN</a> | [111418] Affiliated 
+        </div>
+    </div>
+
+    </footer>
+
+<script src="question-data.js"></script>
 <script src="script.js"></script>
 
 </body>
