@@ -108,7 +108,7 @@ const vocabularyData = {
     
     // Le mix automatique
     get mix() {
-        return [...this.jobHunt, ...this.cybersecurity];
+        return [...this.jobHunt, ...this.cybersecurity, ...this.manholeCovers];
     }
 };
 
