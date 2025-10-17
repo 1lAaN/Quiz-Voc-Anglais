@@ -78,6 +78,33 @@ const vocabularyData = {
         {en: "hacking", fr: "piratage"},
         {en: "to hack", fr: "pirater"}
     ],
+
+    manholeCovers: [
+        {en: "insane question", fr: "question bête/stupide"},
+        {en: "to be thrown by a question", fr: "être déstabilisé par une question"},
+        {en: "to kick oneself for not being more prepared", fr: "se reprocher de ne pas avoir été mieux préparé"},
+        {en: "off the wall question", fr: "question hors sujet"},
+        {en: "to weigh", fr: "peser"},
+        {en: "to fit into", fr: "faire rentrer dans quelque chose"},
+        {en: "to be fit", fr: "être en forme"},
+        {en: "you're shrunk down to the size of a nickel into the bottom of a blender", fr: "tu es réduit à la taille d'une pièce de 5 centimes dans le fond d'un mixeur"},
+        {en: "insightful", fr: "perspicace"},
+        {en: "the question plagued job seekers across industries", fr: "les questions ont assailli les demandeurs d'emploi dans tous les secteurs"},
+        {en: "to be despised", fr: "être méprisé"},
+        {en: "to wonder why", fr: "se demander pourquoi"},
+        {en: "fuzzy", fr: "flou"},
+        {en: "wisdom", fr: "sagesse"},
+        {en: "software engineer", fr: "ingénieur en logiciel"},
+        {en: "the company's hiring commitee", fr: "le comité d'embauche / de recrutement de l'entreprise"},
+        {en: "brain teaser", fr: "casse-tête"},
+        {en: "to tease somebody", fr: "déranger quelqu'un"},
+        {en: "marbles", fr: "billes"},
+        {en: "critical-thinking skills", fr: "esprit critique"},
+        {en: "to juggle", fr: "jongler avec"},
+        {en: "to handle a problem", fr: "gérer un problème"},
+        {en: "to be annoyed", fr: "être énervé(e) / mécontent(e)"},
+        {en: "to do away with something", fr: "se débarrasser de quelque chose"}
+    ],
     
     // Le mix automatique
     get mix() {
