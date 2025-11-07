@@ -200,6 +200,9 @@ function startQuiz() {
 function displayQuestion() {
     const question = currentQuestions[currentQuestionIndex];
     
+    // Déverrouiller pour la nouvelle question
+    answerLocked = false;
+    
     // Mettre à jour le numéro de question et le score
     document.getElementById('question-number').textContent = `Question ${currentQuestionIndex + 1}/${totalQuestions}`;
     document.getElementById('score').textContent = `Score: ${score}`;
@@ -219,6 +222,10 @@ function displayQuestion() {
     choicesContainer.style.display = 'none';
     writeContainer.style.display = 'none';
     
+    // Mettre à jour la barre de progression
+    const progressPercent = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+    document.getElementById('progress-bar').style.width = progressPercent + '%';
+    
     // Afficher selon le type de question
     if (question.type === 'qcm') {
         displayQCM(question);
@@ -227,10 +234,6 @@ function displayQuestion() {
     } else if (question.type === 'write') {
         displayWriteAnswer(question);
     }
-
-    // Dans displayQuestion(), ajoute ça à la fin :
-const progressPercent = ((currentQuestionIndex + 1) / totalQuestions) * 100;
-document.getElementById('progress-bar').style.width = progressPercent + '%';
 }
 
 // Afficher une question QCM
@@ -267,17 +270,18 @@ function displayTrueFalse(question) {
 }
 
 // Afficher une question à écrire
+// Afficher une question à écrire
 function displayWriteAnswer(question) {
     const writeContainer = document.getElementById('write-container');
     writeContainer.style.display = 'block';
     
     const input = document.getElementById('answer-input');
     input.value = '';
-    input.disabled = false;  // ← Réactive l'input !
+    input.disabled = false;  // Réactive l'input !
     input.focus();
     
     const submitBtn = document.getElementById('submit-answer');
-    submitBtn.disabled = false;  // ← Réactive le bouton !
+    submitBtn.disabled = false;  // Réactive le bouton !
     
     // Retirer les anciens event listeners
     const newSubmitBtn = submitBtn.cloneNode(true);
@@ -285,14 +289,14 @@ function displayWriteAnswer(question) {
     
     // Ajouter le nouveau event listener
     newSubmitBtn.addEventListener('click', () => {
-        const userAnswer = input.value.toLowerCase().trim();
+        const userAnswer = normalizeAnswer(input.value);
         checkAnswer(userAnswer);
     });
     
     // Permettre de valider avec Entrée
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            const userAnswer = input.value.toLowerCase().trim();
+            const userAnswer = normalizeAnswer(input.value);
             checkAnswer(userAnswer);
         }
     });
@@ -302,8 +306,16 @@ function displayWriteAnswer(question) {
 
 // Fonction pour vérifier la réponse
 function checkAnswer(userAnswer) {
+    // SI déjà répondu, on sort de la fonction
+    if (answerLocked) return;
+    
+    // On verrouille immédiatement
+    answerLocked = true;
+    
     const question = currentQuestions[currentQuestionIndex];
     let isCorrect = false;
+    
+    disableAnswerButtons();
     
     // Vérifier selon le type de question
     if (question.type === 'qcm') {
@@ -311,7 +323,8 @@ function checkAnswer(userAnswer) {
     } else if (question.type === 'trueFalse') {
         isCorrect = userAnswer === question.correctAnswer;
     } else if (question.type === 'write') {
-        isCorrect = userAnswer === question.correctAnswer;
+        const normalizedCorrectAnswer = normalizeAnswer(question.correctAnswer);
+        isCorrect = userAnswer === normalizedCorrectAnswer;
     }
     
     // Mettre à jour le score
@@ -322,9 +335,6 @@ function checkAnswer(userAnswer) {
     
     // Afficher le feedback
     showFeedback(isCorrect, question);
-    
-    // Désactiver les boutons de réponse
-    disableAnswerButtons();
     
     // Afficher le bouton "Question suivante"
     buttons.next.style.display = 'block';
@@ -409,6 +419,21 @@ function showResults() {
         messageElement.textContent = '📚 N\'hésite pas à revoir le vocabulaire et recommence !';
         messageElement.style.color = '#FF5722';
     }
+}
+
+// Fonction pour normaliser les réponses (enlever espaces, tirets, accents, etc.)
+function normalizeAnswer(answer) {
+    return answer
+        .toLowerCase()
+        .trim()                          // Enlève les espaces au début et à la fin
+        .replace(/\s+/g, ' ')            // Remplace plusieurs espaces par un seul
+        .replace(/[-_]/g, '')            // Enlève les tirets et underscores
+        .replace(/[áàâäã]/g, 'a')        // Normalise les accents
+        .replace(/[éèêë]/g, 'e')
+        .replace(/[íìîï]/g, 'i')
+        .replace(/[óòôöõ]/g, 'o')
+        .replace(/[úùûü]/g, 'u')
+        .replace(/\./g, '');             // Enlève les points
 }
 
 /*
